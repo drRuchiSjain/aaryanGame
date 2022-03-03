@@ -4,6 +4,7 @@ var bowlerStump,batsmanStump;
 var batsmanStumpImage;
 var bowlerStumpImage;
 var batting;
+var runs=0;
 
 function preload(){
 backGround = loadImage("background.png");
@@ -33,6 +34,14 @@ batsmanStump.scale = 0.25;
 bowlerStump = createSprite(95,300,100,100);
 bowlerStump.addImage(bowlerStumpImage);
 bowlerStump.scale = 0.25;
+
+// create invisible sprite
+sbowl = createSprite(300, 300, 100,100);
+sbowl.visible = false;
+
+// create invisible batsman sprite
+sbat = createSprite(500, 340, 10,300);
+sbat.visible = false;
 
 //creating batting frame
 batsman = createSprite(600, 250, 100,100);
@@ -69,18 +78,49 @@ ball.scale = 0.03;
 
 function draw(){
 background(backGround);
+stroke("white");
+strokeWeight(4);
+textSize(20);
+text("Runs :: "+runs, 600,50);
+stroke("yellow");
+text("Pess b to bowl again ", 300,650);
 drawSprites();
 if (keyDown("enter")){
     bowler.addAnimation("bowlpose",bowling);
     ball.velocityX = Math.floor(Math.random()*10);
-      
 }
+ 
+if (ball.isTouching(sbowl)){
+   bowler.addAnimation("bowlpose",bowlerImage);
+} 
+if (ball.isTouching(sbat)){
+    batsman.addAnimation("batpose",batsmanImage);
+ }   
+
 if (keyDown("space")){
+
     batsman.addAnimation("batpose",batting);
+   
 }
 if(ball.isTouching(batsman)){
+ 
     ball.velocityX = -(Math.floor(Math.random()*10));
-    ball.velocityY = (Math.floor(Math.random()*5));
+    ball.velocityY = (Math.floor(Math.random()*5)) || -(Math.floor(Math.random()*5)) ;
+    var run = Math.floor(Math.random()*6);
+    runs = runs + run;
+    if (run == 4){
+        stroke("white");
+        strokeWeight(4);
+        textSize(20);
+        text("Four !!", 400,300);    
+    }
+    if (run == 6){
+        stroke("white");
+        strokeWeight(4);
+        textSize(20);
+        text("Six !!", 400,300);    
+    }
+    
 }
 
 if((ball.isTouching(fielder1)) || (ball.isTouching(fielder2)) ){
@@ -91,6 +131,11 @@ if((ball.isTouching(fielder1)) || (ball.isTouching(fielder2)) ){
     text("Out !!", 400,300);
 }
 
-
+if (keyDown("b")){
+    ball.velocityX=0;
+    ball.velocityY=0;
+    ball.x = 165;
+    ball.y = 260;
+}
 
 }
